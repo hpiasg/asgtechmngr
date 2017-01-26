@@ -56,9 +56,9 @@ along with ASGtechmngr.  If not, see <http://www.gnu.org/licenses/>.
 	<dependencySets>
 		<dependencySet>
 			<outputDirectory>lib</outputDirectory>
-			<includes>
-				<include>de.uni_potsdam.hpi.asg:asgtechmngr</include>
-			</includes>
+			<excludes>
+				<exclude>*:*:tar.gz:*</exclude>
+			</excludes>
 		</dependencySet>
 	</dependencySets>
 </assembly>

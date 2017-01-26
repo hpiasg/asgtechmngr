@@ -113,35 +113,6 @@ along with ASGtechmngr.  If not, see <http://www.gnu.org/licenses/>.
 					<target>1.7</target>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>1.7.1</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-							<artifactSet>
-								<includes>
-									<include>de.uni_potsdam.hpi.asg:asgcommon:jar:</include>
-								</includes>
-							</artifactSet>
-							<filters>
-								<filter>
-									<artifact>de.uni_potsdam.hpi.asg:asgcommon</artifact>
-									<includes>
-										<include>de/uni_potsdam/hpi/asg/common/technology/*</include>
-										<include>de/uni_potsdam/hpi/asg/common/gui/*</include>
-									</includes>
-								</filter>
-							</filters>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 	</build>
 	<profiles>
