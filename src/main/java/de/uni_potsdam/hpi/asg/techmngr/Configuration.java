@@ -19,8 +19,8 @@ package de.uni_potsdam.hpi.asg.techmngr;
  * along with ASGtechmngr.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import de.uni_potsdam.hpi.asg.common.gui.ParamFrame.AbstractBooleanParam;
-import de.uni_potsdam.hpi.asg.common.gui.ParamFrame.AbstractTextParam;
+import de.uni_potsdam.hpi.asg.common.gui.PropertiesPanel.AbstractBooleanParam;
+import de.uni_potsdam.hpi.asg.common.gui.PropertiesPanel.AbstractTextParam;
 
 public class Configuration {
     public static String notapplicableStr = "N/A";

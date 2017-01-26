@@ -19,8 +19,8 @@ package de.uni_potsdam.hpi.asg.techmngr;
  * along with ASGtechmngr.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -32,21 +32,19 @@ import java.util.Vector;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
+import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import de.uni_potsdam.hpi.asg.common.gui.ParamFrame;
+import de.uni_potsdam.hpi.asg.common.gui.PropertiesFrame;
 import de.uni_potsdam.hpi.asg.common.technology.Technology;
-import de.uni_potsdam.hpi.asg.techmngr.Configuration.TextParam;
 
-public class TechMngrFrame extends ParamFrame {
+public class TechMngrFrame extends PropertiesFrame {
     private static final long serialVersionUID = -4879956586784429087L;
 
     private Configuration     config;
@@ -59,18 +57,12 @@ public class TechMngrFrame extends ParamFrame {
         this.addWindowListener(adapt);
         this.instTechs = instTechs;
 
-        JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-        getContentPane().add(tabbedPane, BorderLayout.CENTER);
-
-        constructManagePanel(tabbedPane);
-        constructEditPanel(tabbedPane);
-
-        tabbedPane.setEnabledAt(1, false);
+        constructManagePanel(getContentPane());
     }
 
-    private void constructManagePanel(JTabbedPane tabbedPane) {
+    private void constructManagePanel(Container root) {
         JPanel mngPanel = new JPanel();
-        tabbedPane.addTab("Manage", null, mngPanel, null);
+        root.add(mngPanel);
         GridBagLayout gbl_mngpanel = new GridBagLayout();
         gbl_mngpanel.columnWidths = new int[]{150, 70, 150, 0};
         gbl_mngpanel.columnWeights = new double[]{1.0, 0.0, 1.0, Double.MIN_VALUE};
@@ -95,6 +87,16 @@ public class TechMngrFrame extends ParamFrame {
         mngPanel.add(scroll, gbc_table);
 
         JButton newButton = new JButton("New");
+        newButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JDialog editDia = new EditTechDialog();
+                editDia.pack();
+                editDia.setLocationRelativeTo(null); //center
+                editDia.setVisible(true);
+
+            }
+        });
         GridBagConstraints gbc_newbtn = new GridBagConstraints();
         gbc_newbtn.insets = new Insets(0, 0, 5, 5);
         gbc_newbtn.anchor = GridBagConstraints.LINE_START;
@@ -111,23 +113,6 @@ public class TechMngrFrame extends ParamFrame {
         gbc_importbtn.gridx = 1;
         gbc_importbtn.gridy = 2;
         mngPanel.add(importButton, gbc_importbtn);
-    }
-
-    private void constructEditPanel(JTabbedPane tabbedPane) {
-        JPanel editPanel = new JPanel();
-        tabbedPane.addTab("Edit", null, editPanel, null);
-        GridBagLayout gbl_editpanel = new GridBagLayout();
-        gbl_editpanel.columnWidths = new int[]{150, 300, 0, 0, 40, 0};
-        gbl_editpanel.columnWeights = new double[]{0.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-        gbl_editpanel.rowHeights = new int[]{45, 15, 15, 15, 15, 15, 15, 15, 0};
-        gbl_editpanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-        editPanel.setLayout(gbl_editpanel);
-
-        constructTextEntry(editPanel, 0, TextParam.name, "Name", "");
-        constructTextEntry(editPanel, 1, TextParam.balsafolder, "Balsa technology folder", "", true, JFileChooser.DIRECTORIES_ONLY, false, true, "Choose the folder which contains the startup.scm");
-        constructTextEntry(editPanel, 2, TextParam.genlibfile, "Genlib file", "", true, JFileChooser.FILES_ONLY, false);
-        constructTextEntry(editPanel, 3, TextParam.searchpath, "Search path", "", false, null, false, true, "While using Design Compiler this value is appended to 'search_path'");
-        constructTextEntry(editPanel, 4, TextParam.libraries, "Libraries", "", false, null, false, true, "While using Design Compiler 'link_library' and 'target_library' are set to this value\n(Thus you can define multiple libraries by seperating them with a space character)");
     }
 
     private class InstalledTechsTableModel extends DefaultTableModel {
