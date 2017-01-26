@@ -19,9 +19,6 @@ package de.uni_potsdam.hpi.asg.techmngr;
  * along with ASGtechmngr.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import de.uni_potsdam.hpi.asg.common.gui.ParamFrame.AbstractBooleanParam;
 import de.uni_potsdam.hpi.asg.common.gui.ParamFrame.AbstractTextParam;
 
@@ -30,7 +27,7 @@ public class Configuration {
 
     //@formatter:off
     public enum TextParam implements AbstractTextParam {
-        name, balsafolder, genlibfile, searchpath, libraries
+        /*edit*/ name, balsafolder, genlibfile, searchpath, libraries
     }
 
     public enum BooleanParam implements AbstractBooleanParam {

@@ -31,8 +31,12 @@ public class TechMngrMain {
         } catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e1) {
             return;
         }
+
+        InstalledTechs inst = new InstalledTechs("$BASEDIR/tech");
+        inst.readIn();
+
         TechMngrWindowAdapter adapt = new TechMngrWindowAdapter();
-        TechMngrFrame tiframe = new TechMngrFrame(new Configuration(), adapt);
+        TechMngrFrame tiframe = new TechMngrFrame(new Configuration(), adapt, inst);
         tiframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         tiframe.pack();
         tiframe.setLocationRelativeTo(null); //center

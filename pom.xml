@@ -69,6 +69,12 @@ along with ASGtechmngr.  If not, see <http://www.gnu.org/licenses/>.
 					<exclude>**/*</exclude>
 				</excludes>
 			</resource>
+			<resource>
+				<directory>src/main/resources/jar</directory>
+				<includes>
+					<include>**/*</include>
+				</includes>
+			</resource>
 		</resources>
 		<pluginManagement>
 			<plugins>
@@ -261,6 +267,12 @@ along with ASGtechmngr.  If not, see <http://www.gnu.org/licenses/>.
 			<groupId>de.uni_potsdam.hpi.asg</groupId>
 			<artifactId>asgcommon</artifactId>
 			<version>${common.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>
