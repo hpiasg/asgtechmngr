@@ -32,7 +32,6 @@ import java.util.Vector;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -45,17 +44,18 @@ import de.uni_potsdam.hpi.asg.common.gui.PropertiesFrame;
 import de.uni_potsdam.hpi.asg.common.technology.Technology;
 
 public class TechMngrFrame extends PropertiesFrame {
-    private static final long serialVersionUID = -4879956586784429087L;
+    private static final long        serialVersionUID = -4879956586784429087L;
 
-    private Configuration     config;
-    private InstalledTechs    instTechs;
+    private Configuration            config;
+    private Set<Technology>          instTechs;
+    private InstalledTechsTableModel tablemodel;
 
     public TechMngrFrame(Configuration config, WindowAdapter adapt, InstalledTechs instTechs) {
         super("ASGtechmngr");
         this.config = config;
         this.config.setFrame(this);
         this.addWindowListener(adapt);
-        this.instTechs = instTechs;
+        this.instTechs = instTechs.getTechs();
 
         constructManagePanel(getContentPane());
     }
@@ -70,11 +70,11 @@ public class TechMngrFrame extends PropertiesFrame {
         gbl_mngpanel.rowWeights = new double[]{1.0, 0.0, 0.0, Double.MIN_VALUE};
         mngPanel.setLayout(gbl_mngpanel);
 
-        InstalledTechsTableModel tm = new InstalledTechsTableModel(instTechs.getTechs());
-        JTable table = new JTable(tm);
+        tablemodel = new InstalledTechsTableModel(instTechs);
+        JTable table = new JTable(tablemodel);
         table.setCellSelectionEnabled(false);
         table.getTableHeader().setUI(null);
-        tm.formatTable(table);
+        tablemodel.formatTable(table);
 
         JScrollPane scroll = new JScrollPane(table);
         GridBagConstraints gbc_table = new GridBagConstraints();
@@ -90,11 +90,14 @@ public class TechMngrFrame extends PropertiesFrame {
         newButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JDialog editDia = new EditTechDialog(null);
+                EditTechDialog editDia = new EditTechDialog();
                 editDia.pack();
                 editDia.setLocationRelativeTo(null); //center
                 editDia.setVisible(true);
-
+                //wait
+                if(editDia.getTech() != null) {
+                    tablemodel.addTech(editDia.getTech());
+                }
             }
         });
         GridBagConstraints gbc_newbtn = new GridBagConstraints();
@@ -117,26 +120,32 @@ public class TechMngrFrame extends PropertiesFrame {
 
     private class InstalledTechsTableModel extends DefaultTableModel {
         private static final long serialVersionUID = -1667760148528261921L;
-//        private Set<Technology>   techs;
         private JTable            table;
 
-        private final String[]    buttonCols       = {"Edit", "Export", "Delete"};
+        private final String[]    buttonCols       = {"Export", "Delete"};
 
         public InstalledTechsTableModel(Set<Technology> techs) {
             super();
-//            this.techs = techs;
             this.addColumn("Name");
             for(String str : buttonCols) {
                 this.addColumn(str);
             }
             for(Technology t : techs) {
-                Vector<Object> data = new Vector<>();
-                data.add(t.getName());
-                for(String str : buttonCols) {
-                    data.add(str);
-                }
-                this.addRow(data);
+                renderTech(t);
             }
+        }
+
+        private void renderTech(Technology t) {
+            Vector<Object> data = new Vector<>();
+            data.add(t.getName());
+            for(String str : buttonCols) {
+                data.add(str);
+            }
+            this.addRow(data);
+        }
+
+        public void addTech(Technology t) {
+            renderTech(t);
         }
 
         public void formatTable(JTable table) {

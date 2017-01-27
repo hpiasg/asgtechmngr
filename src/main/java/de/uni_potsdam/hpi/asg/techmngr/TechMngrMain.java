@@ -25,8 +25,10 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 public class TechMngrMain {
 
-    public static String techdir           = "$BASEDIR/tech";
-    public static String techfileExtension = ".xml";
+    public static String techdir             = "$BASEDIR/tech";
+    public static String balsatechdir        = "$BASEDIR/tools/balsa/share/tech";
+    public static String techfileExtension   = ".xml";
+    public static String genlibfileExtension = ".lib";
 
     public static void main(String[] args) {
         try {
