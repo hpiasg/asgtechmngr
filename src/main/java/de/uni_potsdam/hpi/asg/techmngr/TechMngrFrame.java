@@ -78,7 +78,7 @@ public class TechMngrFrame extends PropertiesFrame {
 
         JScrollPane scroll = new JScrollPane(table);
         GridBagConstraints gbc_table = new GridBagConstraints();
-        gbc_table.insets = new Insets(0, 0, 5, 5);
+        gbc_table.insets = new Insets(5, 5, 5, 5);
         gbc_table.anchor = GridBagConstraints.LINE_START;
         gbc_table.fill = GridBagConstraints.BOTH;
         gbc_table.gridx = 0;
@@ -98,7 +98,7 @@ public class TechMngrFrame extends PropertiesFrame {
             }
         });
         GridBagConstraints gbc_newbtn = new GridBagConstraints();
-        gbc_newbtn.insets = new Insets(0, 0, 5, 5);
+        gbc_newbtn.insets = new Insets(0, 0, 5, 0);
         gbc_newbtn.anchor = GridBagConstraints.LINE_START;
         gbc_newbtn.fill = GridBagConstraints.HORIZONTAL;
         gbc_newbtn.gridx = 1;
@@ -107,7 +107,7 @@ public class TechMngrFrame extends PropertiesFrame {
 
         JButton importButton = new JButton("Import");
         GridBagConstraints gbc_importbtn = new GridBagConstraints();
-        gbc_importbtn.insets = new Insets(0, 0, 5, 5);
+        gbc_importbtn.insets = new Insets(0, 0, 5, 0);
         gbc_importbtn.anchor = GridBagConstraints.LINE_START;
         gbc_importbtn.fill = GridBagConstraints.HORIZONTAL;
         gbc_importbtn.gridx = 1;
