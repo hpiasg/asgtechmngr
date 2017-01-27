@@ -25,6 +25,9 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 public class TechMngrMain {
 
+    public static String techdir           = "$BASEDIR/tech";
+    public static String techfileExtension = ".xml";
+
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -32,7 +35,7 @@ public class TechMngrMain {
             return;
         }
 
-        InstalledTechs inst = new InstalledTechs("$BASEDIR/tech");
+        InstalledTechs inst = new InstalledTechs(techdir);
         inst.readIn();
 
         TechMngrWindowAdapter adapt = new TechMngrWindowAdapter();

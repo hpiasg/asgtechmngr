@@ -90,7 +90,7 @@ public class TechMngrFrame extends PropertiesFrame {
         newButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JDialog editDia = new EditTechDialog();
+                JDialog editDia = new EditTechDialog(null);
                 editDia.pack();
                 editDia.setLocationRelativeTo(null); //center
                 editDia.setVisible(true);
