@@ -20,17 +20,17 @@ package de.uni_potsdam.hpi.asg.techmngr;
  */
 
 import java.awt.Window;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.swing.JOptionPane;
 
 import org.apache.commons.io.FileUtils;
+
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 
 import de.uni_potsdam.hpi.asg.common.iohelper.FileHelper;
 import de.uni_potsdam.hpi.asg.common.technology.Balsa;
@@ -40,10 +40,10 @@ import de.uni_potsdam.hpi.asg.common.technology.Technology;
 
 public class TechnologyDirectory {
 
-    private File            dir;
-    private Set<Technology> techs;
+    private File                      dir;
+    private BiMap<String, Technology> techs;
 
-    private TechnologyDirectory(File dir, Set<Technology> techs) {
+    private TechnologyDirectory(File dir, BiMap<String, Technology> techs) {
         this.dir = dir;
         this.techs = techs;
     }
@@ -59,24 +59,24 @@ public class TechnologyDirectory {
         if(!dir.isDirectory()) {
             return null;
         }
-        Set<Technology> techs = TechnologyDirectory.readTechnologies(dir);
+        BiMap<String, Technology> techs = TechnologyDirectory.readTechnologies(dir);
 
         return new TechnologyDirectory(dir, techs);
     }
 
-    private static Set<Technology> readTechnologies(File dir) {
-        Set<Technology> techs = new HashSet<>();
+    private static BiMap<String, Technology> readTechnologies(File dir) {
+        BiMap<String, Technology> techs = HashBiMap.create();
         for(File f : dir.listFiles()) {
             Technology t = Technology.readInSilent(f);
             if(t != null) {
-                techs.add(t);
+                techs.put(t.getName(), t);
             }
         }
         return techs;
     }
 
-    public Technology createTechnology(Window parent, String name, String balsafolder, String genlibfile, String searchPaths, String libraries) {
-        Balsa balsa = new Balsa("resyn", name);
+    public Technology createTechnology(Window parent, String name, String balsafolder, String style, String genlibfile, String searchPaths, String libraries, List<String> postCompileCmds, List<String> verilogIncludes) {
+        Balsa balsa = new Balsa(style, name);
         File sourcedir = new File(balsafolder);
         File targetdir = new File(getBalsaTechDir(), name);
         targetdir.mkdirs();
@@ -97,8 +97,6 @@ public class TechnologyDirectory {
             return null;
         }
 
-        List<String> postCompileCmds = new ArrayList<>(); // aka not yet implemented
-        List<String> verilogIncludes = new ArrayList<>(); // aka not yet implemented
         SyncTool synctool = new SyncTool(searchPaths, libraries, postCompileCmds, verilogIncludes);
 
         Technology tech = new Technology(name, balsa, genlib, synctool);
@@ -106,20 +104,34 @@ public class TechnologyDirectory {
             JOptionPane.showMessageDialog(parent, "Error while creating technology file", "Error", JOptionPane.ERROR_MESSAGE);
             return null;
         }
-        this.techs.add(tech);
+        this.techs.put(name, tech);
 
         return tech;
     }
 
-    public void deleteTechnology(Window parent, String name) {
-        Technology tech = null;
-        for(Technology t : techs) {
-            if(t.getName().equals(name)) {
-                tech = t;
-                break;
-            }
+    public Technology importTechnology(Window parent, Technology srcTech, File srcDir) {
+        String name = srcTech.getName();
+
+        if(techs.containsKey(name)) {
+            return null;
         }
-        if(tech == null) {
+
+        File balsaSourceFolder = new File(srcDir, srcTech.getBalsa().getTech());
+        String balsafolder = balsaSourceFolder.getAbsolutePath();
+        String style = srcTech.getBalsa().getStyle();
+
+        String genlibfile = srcTech.getGenLib();
+
+        String searchPaths = srcTech.getSynctool().getSearchPaths();
+        String libraries = srcTech.getSynctool().getLibraries();
+        List<String> postCompileCmds = srcTech.getSynctool().getPostCompileCmds();
+        List<String> verilogIncludes = srcTech.getSynctool().getVerilogIncludes();
+
+        return createTechnology(parent, name, balsafolder, style, genlibfile, searchPaths, libraries, postCompileCmds, verilogIncludes);
+    }
+
+    public void deleteTechnology(Window parent, String name) {
+        if(!techs.containsKey(name)) {
             return;
         }
 
@@ -140,7 +152,7 @@ public class TechnologyDirectory {
             JOptionPane.showMessageDialog(parent, "Failed to remove technology file", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-        techs.remove(tech);
+        techs.remove(techs.get(name));
     }
 
     private File getBalsaTechDir() {
@@ -148,6 +160,6 @@ public class TechnologyDirectory {
     }
 
     public Set<Technology> getTechs() {
-        return techs;
+        return techs.values();
     }
 }

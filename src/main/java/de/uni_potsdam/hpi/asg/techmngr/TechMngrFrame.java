@@ -146,12 +146,23 @@ public class TechMngrFrame extends PropertiesFrame {
     }
 
     private void importTechFromFile(File file) {
-        // TODO Auto-generated method stub
 
     }
 
     private void importTechFromDir(File file) {
-
+        TechnologyDirectory tmpTechDir = TechnologyDirectory.create(file);
+        if(tmpTechDir == null) {
+            return;
+        }
+        int num = 0;
+        for(Technology srcTech : tmpTechDir.getTechs()) {
+            Technology newTech = techDir.importTechnology(parent, srcTech, file);
+            if(newTech != null) {
+                tablemodel.addTech(newTech);
+                num++;
+            }
+        }
+        JOptionPane.showMessageDialog(parent, "Imported " + num + " technologies", "Info", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private class InstalledTechsTableModel extends DefaultTableModel {
