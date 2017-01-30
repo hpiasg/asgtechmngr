@@ -31,8 +31,10 @@ import org.apache.commons.io.FileUtils;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import com.google.common.io.Files;
 
 import de.uni_potsdam.hpi.asg.common.iohelper.FileHelper;
+import de.uni_potsdam.hpi.asg.common.iohelper.Zipper;
 import de.uni_potsdam.hpi.asg.common.technology.Balsa;
 import de.uni_potsdam.hpi.asg.common.technology.Genlib;
 import de.uni_potsdam.hpi.asg.common.technology.SyncTool;
@@ -130,6 +132,48 @@ public class TechnologyDirectory {
         return createTechnology(parent, name, balsafolder, style, genlibfile, searchPaths, libraries, postCompileCmds, verilogIncludes);
     }
 
+    public void exportTechnology(Window parent, String name, File dstDir) {
+        if(!techs.containsKey(name)) {
+            return;
+        }
+
+        File tmpDir = Files.createTempDir();
+
+        File balsadir = new File(getBalsaTechDir(), name);
+        File balsaDstDir = new File(tmpDir, name);
+        try {
+            FileUtils.copyDirectory(balsadir, balsaDstDir);
+        } catch(IOException e) {
+            JOptionPane.showMessageDialog(parent, "Failed to copy Balsa technology folder", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        File genlibfile = new File(dir, name + TechMngrMain.genlibfileExtension);
+        File genlibDstFile = new File(tmpDir, name + TechMngrMain.genlibfileExtension);
+        try {
+            FileUtils.copyFile(genlibfile, genlibDstFile);
+        } catch(IOException e) {
+            JOptionPane.showMessageDialog(parent, "Failed to copy Genlib file", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        File techfile = new File(dir, name + TechMngrMain.techfileExtension);
+        File techDstFile = new File(tmpDir, name + TechMngrMain.techfileExtension);
+        try {
+            FileUtils.copyFile(techfile, techDstFile);
+        } catch(IOException e) {
+            JOptionPane.showMessageDialog(parent, "Failed to copy technology file", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        File dstFile = new File(dstDir, name + TechMngrMain.zipfileExtension);
+        if(!Zipper.getInstance().zip(dstFile, tmpDir)) {
+            JOptionPane.showMessageDialog(parent, "Failed to create export file", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        try {
+            FileUtils.deleteDirectory(tmpDir);
+        } catch(IOException e) {
+        }
+    }
+
     public void deleteTechnology(Window parent, String name) {
         if(!techs.containsKey(name)) {
             return;
@@ -152,7 +196,7 @@ public class TechnologyDirectory {
             JOptionPane.showMessageDialog(parent, "Failed to remove technology file", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-        techs.remove(techs.get(name));
+        techs.remove(name);
     }
 
     private File getBalsaTechDir() {

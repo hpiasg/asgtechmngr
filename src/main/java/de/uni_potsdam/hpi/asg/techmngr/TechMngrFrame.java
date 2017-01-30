@@ -245,7 +245,13 @@ public class TechMngrFrame extends PropertiesFrame {
         }
 
         private void execExport(Technology t) {
-
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int result = fileChooser.showOpenDialog(parent);
+            if(result == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                techDir.exportTechnology(parent, t.getName(), selectedFile);
+            }
         }
 
         private void execDelete(Technology t, int row) {

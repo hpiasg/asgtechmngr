@@ -29,6 +29,7 @@ public class TechMngrMain {
     public static String balsatechdir        = "$BASEDIR/tools/balsa/share/tech";
     public static String techfileExtension   = ".xml";
     public static String genlibfileExtension = ".lib";
+    public static String zipfileExtension    = ".zip";
 
     public static void main(String[] args) {
         try {
