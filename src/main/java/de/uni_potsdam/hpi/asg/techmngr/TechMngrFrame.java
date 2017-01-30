@@ -138,21 +138,32 @@ public class TechMngrFrame extends PropertiesFrame {
         if(!file.exists()) {
             return;
         }
+        int num = 0;
         if(file.isDirectory()) {
-            importTechFromDir(file);
+            num = importTechFromDir(file);
             return;
+        } else {
+            num = importTechFromFile(file);
         }
-        importTechFromFile(file);
+        JOptionPane.showMessageDialog(parent, "Imported " + num + " technologies", "Info", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    private void importTechFromFile(File file) {
-
+    private int importTechFromFile(File file) {
+        Technology tech = Technology.readInSilent(file);
+        if(tech != null) {
+            Technology newTech = techDir.importTechnology(parent, tech, file.getParentFile());
+            if(newTech != null) {
+                tablemodel.addTech(newTech);
+                return 1;
+            }
+        }
+        return 0;
     }
 
-    private void importTechFromDir(File file) {
+    private int importTechFromDir(File file) {
         TechnologyDirectory tmpTechDir = TechnologyDirectory.create(file);
         if(tmpTechDir == null) {
-            return;
+            return 0;
         }
         int num = 0;
         for(Technology srcTech : tmpTechDir.getTechs()) {
@@ -162,7 +173,7 @@ public class TechMngrFrame extends PropertiesFrame {
                 num++;
             }
         }
-        JOptionPane.showMessageDialog(parent, "Imported " + num + " technologies", "Info", JOptionPane.INFORMATION_MESSAGE);
+        return num;
     }
 
     private class InstalledTechsTableModel extends DefaultTableModel {
