@@ -184,6 +184,15 @@ public class TechMngrFrame extends PropertiesFrame {
 
         private void execDelete(Technology t, int row) {
             String name = t.getName();
+            int answer = JOptionPane.showConfirmDialog(parent, "Do you really want to permanently delete all files of technology '" + name + "'?", "", JOptionPane.YES_NO_OPTION);
+            switch(answer) {
+                case JOptionPane.YES_OPTION:
+                    break;
+                case JOptionPane.NO_OPTION:
+                default:
+                    return;
+            }
+
             File balsadir = new File(FileHelper.getInstance().replaceBasedir(TechMngrMain.balsatechdir), name);
             try {
                 FileUtils.deleteDirectory(balsadir);
