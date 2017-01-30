@@ -28,10 +28,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -39,26 +36,34 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.io.FileUtils;
 
 import de.uni_potsdam.hpi.asg.common.gui.PropertiesDialog;
 import de.uni_potsdam.hpi.asg.common.gui.PropertiesPanel;
+import de.uni_potsdam.hpi.asg.common.gui.PropertiesPanel.AbstractBooleanParam;
+import de.uni_potsdam.hpi.asg.common.gui.PropertiesPanel.AbstractTextParam;
 import de.uni_potsdam.hpi.asg.common.iohelper.FileHelper;
-import de.uni_potsdam.hpi.asg.common.technology.Balsa;
-import de.uni_potsdam.hpi.asg.common.technology.Genlib;
-import de.uni_potsdam.hpi.asg.common.technology.SyncTool;
 import de.uni_potsdam.hpi.asg.common.technology.Technology;
-import de.uni_potsdam.hpi.asg.techmngr.Configuration.TextParam;
 
-public class EditTechDialog extends PropertiesDialog {
-    private static final long serialVersionUID = 7635453181517878899L;
+public class NewTechDialog extends PropertiesDialog {
+    private static final long   serialVersionUID = 7635453181517878899L;
 
-    private EditTechDialog    parent;
-    private Technology        tech;
+    private NewTechDialog       parent;
+    private Technology          tech;
+    private TechnologyDirectory techDir;
 
-    public EditTechDialog() {
+    //@formatter:off
+    public enum TextParam implements AbstractTextParam {
+        /*edit*/ name, balsafolder, genlibfile, searchpath, libraries
+    }
+
+    public enum BooleanParam implements AbstractBooleanParam {
+    }
+    //@formatter:on
+
+    public NewTechDialog(TechnologyDirectory techDir) {
         this.parent = this;
         this.tech = null;
+        this.techDir = techDir;
 
         this.setModalityType(ModalityType.APPLICATION_MODAL);
 
@@ -110,55 +115,20 @@ public class EditTechDialog extends PropertiesDialog {
             }
         });
         btnPanel.add(saveButton);
-
-//        JButton closeButton = new JButton("Close");
-//        closeButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                dispatchEvent(new WindowEvent(parent, WindowEvent.WINDOW_CLOSING));
-//            }
-//        });
-//        btnPanel.add(closeButton);
     }
 
     private boolean createTechnology() {
         String name = textfields.get(TextParam.name).getText();
-
-        Balsa balsa = new Balsa("resyn", name);
-        File sourcedir = new File(textfields.get(TextParam.balsafolder).getText());
-        File targetdir = new File(FileHelper.getInstance().replaceBasedir(TechMngrMain.balsatechdir), name);
-        targetdir.mkdirs();
-        try {
-            FileUtils.copyDirectory(sourcedir, targetdir);
-        } catch(IOException e) {
-            JOptionPane.showMessageDialog(this, "Error while copying balsa technology directory", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        File techdir = getTechDir();
-        techdir.mkdirs();
-
-        Genlib genlib = new Genlib(name + TechMngrMain.genlibfileExtension);
-        File sourcefile = new File(textfields.get(TextParam.genlibfile).getText());
-        File targetfile = new File(techdir, name + TechMngrMain.genlibfileExtension);
-        try {
-            FileUtils.copyFile(sourcefile, targetfile);
-        } catch(IOException e) {
-            JOptionPane.showMessageDialog(this, "Error while copying genlib file", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
+        String balsafolder = textfields.get(TextParam.balsafolder).getText();
+        String genlibfile = textfields.get(TextParam.genlibfile).getText();
         String searchPaths = textfields.get(TextParam.searchpath).getText();
         String libraries = textfields.get(TextParam.libraries).getText();
-        List<String> postCompileCmds = new ArrayList<>(); // aka not yet implemented
-        List<String> verilogIncludes = new ArrayList<>(); // aka not yet implemented
-        SyncTool synctool = new SyncTool(searchPaths, libraries, postCompileCmds, verilogIncludes);
 
-        tech = new Technology(name, balsa, genlib, synctool);
-        if(!Technology.writeOut(tech, new File(techdir, name + TechMngrMain.techfileExtension))) {
-            JOptionPane.showMessageDialog(this, "Error while creating technology file", "Error", JOptionPane.ERROR_MESSAGE);
+        Technology tech = techDir.createTechnology(this, name, balsafolder, genlibfile, searchPaths, libraries);
+        if(tech == null) {
             return false;
         }
+        this.tech = tech;
 
         return true;
     }

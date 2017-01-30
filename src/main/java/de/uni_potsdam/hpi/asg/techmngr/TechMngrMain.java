@@ -37,11 +37,13 @@ public class TechMngrMain {
             return;
         }
 
-        InstalledTechs inst = new InstalledTechs(techdir);
-        inst.readIn();
+        TechnologyDirectory techDir = TechnologyDirectory.create(techdir);
+        if(techDir == null) {
+            return;
+        }
 
         TechMngrWindowAdapter adapt = new TechMngrWindowAdapter();
-        TechMngrFrame tiframe = new TechMngrFrame(new Configuration(), adapt, inst);
+        TechMngrFrame tiframe = new TechMngrFrame(adapt, techDir);
         tiframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         tiframe.pack();
         tiframe.setLocationRelativeTo(null); //center
