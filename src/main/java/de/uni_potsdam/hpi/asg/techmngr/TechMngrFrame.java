@@ -220,7 +220,7 @@ public class TechMngrFrame extends PropertiesFrame {
                     return;
             }
 
-            techDir.deleteTechnology(parent, t);
+            techDir.deleteTechnology(parent, t.getName());
             rows.remove(row);
             removeRow(row);
         }

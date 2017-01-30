@@ -111,8 +111,17 @@ public class TechnologyDirectory {
         return tech;
     }
 
-    public void deleteTechnology(Window parent, Technology t) {
-        String name = t.getName();
+    public void deleteTechnology(Window parent, String name) {
+        Technology tech = null;
+        for(Technology t : techs) {
+            if(t.getName().equals(name)) {
+                tech = t;
+                break;
+            }
+        }
+        if(tech == null) {
+            return;
+        }
 
         File balsadir = new File(getBalsaTechDir(), name);
         try {
@@ -130,6 +139,8 @@ public class TechnologyDirectory {
         if(!techfile.delete()) {
             JOptionPane.showMessageDialog(parent, "Failed to remove technology file", "Error", JOptionPane.ERROR_MESSAGE);
         }
+
+        techs.remove(tech);
     }
 
     private File getBalsaTechDir() {
