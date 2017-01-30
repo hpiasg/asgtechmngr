@@ -28,6 +28,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -45,7 +46,12 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import org.apache.commons.io.FileUtils;
+
+import com.google.common.io.Files;
+
 import de.uni_potsdam.hpi.asg.common.gui.PropertiesFrame;
+import de.uni_potsdam.hpi.asg.common.iohelper.Zipper;
 import de.uni_potsdam.hpi.asg.common.technology.Technology;
 
 public class TechMngrFrame extends PropertiesFrame {
@@ -157,6 +163,17 @@ public class TechMngrFrame extends PropertiesFrame {
                 return 1;
             }
         }
+
+        File tmpDir = Files.createTempDir();
+        if(Zipper.getInstance().unzip(file, tmpDir)) {
+            int num = importTechFromDir(tmpDir);
+            try {
+                FileUtils.deleteDirectory(tmpDir);
+            } catch(IOException e) {
+            }
+            return num;
+        }
+
         return 0;
     }
 
