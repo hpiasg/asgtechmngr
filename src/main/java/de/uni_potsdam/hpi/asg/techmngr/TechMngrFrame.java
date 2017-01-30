@@ -27,11 +27,17 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -40,8 +46,12 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import org.apache.commons.io.FileUtils;
+
 import de.uni_potsdam.hpi.asg.common.gui.PropertiesFrame;
+import de.uni_potsdam.hpi.asg.common.iohelper.FileHelper;
 import de.uni_potsdam.hpi.asg.common.technology.Technology;
+import de.uni_potsdam.hpi.asg.techmngr.Configuration.TextParam;
 
 public class TechMngrFrame extends PropertiesFrame {
     private static final long        serialVersionUID = -4879956586784429087L;
@@ -49,6 +59,7 @@ public class TechMngrFrame extends PropertiesFrame {
     private Configuration            config;
     private Set<Technology>          instTechs;
     private InstalledTechsTableModel tablemodel;
+    private JFrame                   parent;
 
     public TechMngrFrame(Configuration config, WindowAdapter adapt, InstalledTechs instTechs) {
         super("ASGtechmngr");
@@ -56,6 +67,7 @@ public class TechMngrFrame extends PropertiesFrame {
         this.config.setFrame(this);
         this.addWindowListener(adapt);
         this.instTechs = instTechs.getTechs();
+        this.parent = this;
 
         constructManagePanel(getContentPane());
     }
@@ -123,9 +135,11 @@ public class TechMngrFrame extends PropertiesFrame {
         private JTable            table;
 
         private final String[]    buttonCols       = {"Export", "Delete"};
+        private List<Technology>  rows;
 
         public InstalledTechsTableModel(Set<Technology> techs) {
             super();
+            this.rows = new ArrayList<>();
             this.addColumn("Name");
             for(String str : buttonCols) {
                 this.addColumn(str);
@@ -142,6 +156,54 @@ public class TechMngrFrame extends PropertiesFrame {
                 data.add(str);
             }
             this.addRow(data);
+            this.rows.add(t);
+        }
+
+        public void execTableButton(int row, int column) {
+            int buttoncol = column - 1;
+            if(buttoncol < 0 || buttoncol > buttonCols.length) {
+                return;
+            }
+            if(row < 0 || row > rows.size()) {
+                return;
+            }
+            Technology t = rows.get(row);
+            switch(buttonCols[buttoncol]) {
+                case "Delete":
+                    execDelete(t, row);
+                    break;
+                case "Export":
+                    execExport(t);
+                    break;
+            }
+        }
+
+        private void execExport(Technology t) {
+
+        }
+
+        private void execDelete(Technology t, int row) {
+            String name = t.getName();
+            File balsadir = new File(FileHelper.getInstance().replaceBasedir(TechMngrMain.balsatechdir), name);
+            try {
+                FileUtils.deleteDirectory(balsadir);
+            } catch(IOException e) {
+                JOptionPane.showMessageDialog(parent, "Failed to remove Balsa technology folder", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+            File techdir = FileHelper.getInstance().replaceBasedir(TechMngrMain.techdir);
+            File genlibfile = new File(techdir, name + TechMngrMain.genlibfileExtension);
+            if(!genlibfile.delete()) {
+                JOptionPane.showMessageDialog(parent, "Failed to remove Genlib file", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+            File techfile = new File(techdir, name + TechMngrMain.techfileExtension);
+            if(!techfile.delete()) {
+                JOptionPane.showMessageDialog(parent, "Failed to remove technology file", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+            rows.remove(row);
+            removeRow(row);
         }
 
         public void addTech(Technology t) {
@@ -159,7 +221,7 @@ public class TechMngrFrame extends PropertiesFrame {
 
         private void internalSetColRenderer(TableColumn col) {
             col.setCellRenderer(new ButtonRenderer());
-            col.setCellEditor(new ButtonCellEditor());
+            col.setCellEditor(new ButtonCellEditor(this));
             col.setPreferredWidth(40);
         }
 
@@ -195,13 +257,13 @@ public class TechMngrFrame extends PropertiesFrame {
         private Integer           row;
         private Integer           col;
 
-        public ButtonCellEditor() {
+        public ButtonCellEditor(final InstalledTechsTableModel tm) {
             super();
             button = new JButton();
             button.setOpaque(true);
             button.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("test " + row + ", " + col);
+                    tm.execTableButton(row, col);
                 }
             });
             row = null;
