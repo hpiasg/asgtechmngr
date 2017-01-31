@@ -19,19 +19,20 @@ package de.uni_potsdam.hpi.asg.techmngr;
  * along with ASGtechmngr.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import java.io.File;
+
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import de.uni_potsdam.hpi.asg.common.iohelper.FileHelper;
 import de.uni_potsdam.hpi.asg.common.iohelper.LoggerHelper;
+import de.uni_potsdam.hpi.asg.common.technology.TechnologyDirectory;
 
 public class TechMngrMain {
 
-    public static String techdir             = "$BASEDIR/tech";
-    public static String balsatechdir        = "$BASEDIR/tools/balsa/share/tech";
-    public static String techfileExtension   = ".xml";
-    public static String genlibfileExtension = ".lib";
-    public static String zipfileExtension    = ".zip";
+    public static String techdir      = "$BASEDIR/tech";
+    public static String balsatechdir = "$BASEDIR/tools/balsa/share/tech";
 
     public static void main(String[] args) {
         LoggerHelper.initLogger(3, null, false);
@@ -42,7 +43,9 @@ public class TechMngrMain {
             return;
         }
 
-        TechnologyDirectory techDir = TechnologyDirectory.create(techdir);
+        File balsaTechDirFile = FileHelper.getInstance().replaceBasedir(balsatechdir);
+
+        TechnologyDirectory techDir = TechnologyDirectory.create(techdir, balsaTechDirFile);
         if(techDir == null) {
             return;
         }

@@ -46,6 +46,7 @@ import de.uni_potsdam.hpi.asg.common.gui.PropertiesPanel.AbstractBooleanParam;
 import de.uni_potsdam.hpi.asg.common.gui.PropertiesPanel.AbstractTextParam;
 import de.uni_potsdam.hpi.asg.common.iohelper.FileHelper;
 import de.uni_potsdam.hpi.asg.common.technology.Technology;
+import de.uni_potsdam.hpi.asg.common.technology.TechnologyDirectory;
 
 public class NewTechDialog extends PropertiesDialog {
     private static final long   serialVersionUID = 7635453181517878899L;
@@ -164,7 +165,7 @@ public class NewTechDialog extends PropertiesDialog {
             return false;
         }
 
-        File f = new File(getTechDir(), name + TechMngrMain.techfileExtension);
+        File f = new File(getTechDir(), name + TechnologyDirectory.techfileExtension);
         if(f.exists()) {
             logger.error("Technology " + name + " already exists. Delete it first");
             return false;

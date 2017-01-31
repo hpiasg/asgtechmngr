@@ -56,6 +56,7 @@ import com.google.common.io.Files;
 import de.uni_potsdam.hpi.asg.common.gui.PropertiesFrame;
 import de.uni_potsdam.hpi.asg.common.iohelper.Zipper;
 import de.uni_potsdam.hpi.asg.common.technology.Technology;
+import de.uni_potsdam.hpi.asg.common.technology.TechnologyDirectory;
 
 public class TechMngrFrame extends PropertiesFrame {
     private static final long        serialVersionUID = -4879956586784429087L;
@@ -182,7 +183,7 @@ public class TechMngrFrame extends PropertiesFrame {
     }
 
     private int importTechFromDir(File file) {
-        TechnologyDirectory tmpTechDir = TechnologyDirectory.create(file);
+        TechnologyDirectory tmpTechDir = TechnologyDirectory.create(file, null);
         if(tmpTechDir == null) {
             return 0;
         }

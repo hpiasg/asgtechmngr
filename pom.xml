@@ -235,11 +235,6 @@ along with ASGtechmngr.  If not, see <http://www.gnu.org/licenses/>.
 	</profiles>
 	<dependencies>
 		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.4</version>
-		</dependency>
-		<dependency>
 			<groupId>de.uni_potsdam.hpi.asg</groupId>
 			<artifactId>asgcommon</artifactId>
 			<version>${common.version}</version>
@@ -249,11 +244,6 @@ along with ASGtechmngr.  If not, see <http://www.gnu.org/licenses/>.
 			<artifactId>junit</artifactId>
 			<version>4.11</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>18.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
