@@ -132,7 +132,7 @@ public class NewTechDialog extends PropertiesDialog {
         List<String> postCompileCmds = new ArrayList<>(); // aka not yet implemented
         List<String> verilogIncludes = new ArrayList<>(); // aka not yet implemented
 
-        Technology tech = techDir.createTechnology(this, name, balsafolder, "resyn", genlibfile, searchPaths, libraries, postCompileCmds, verilogIncludes);
+        Technology tech = techDir.createTechnology(name, balsafolder, "resyn", genlibfile, searchPaths, libraries, postCompileCmds, verilogIncludes);
         if(tech == null) {
             return false;
         }

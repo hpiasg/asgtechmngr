@@ -162,7 +162,7 @@ public class TechMngrFrame extends PropertiesFrame {
     private int importTechFromFile(File file) {
         Technology tech = Technology.readInSilent(file);
         if(tech != null) {
-            Technology newTech = techDir.importTechnology(parent, tech, file.getParentFile());
+            Technology newTech = techDir.importTechnology(tech, file.getParentFile());
             if(newTech != null) {
                 tablemodel.addTech(newTech);
                 return 1;
@@ -189,7 +189,7 @@ public class TechMngrFrame extends PropertiesFrame {
         }
         int num = 0;
         for(Technology srcTech : tmpTechDir.getTechs()) {
-            Technology newTech = techDir.importTechnology(parent, srcTech, file);
+            Technology newTech = techDir.importTechnology(srcTech, file);
             if(newTech != null) {
                 tablemodel.addTech(newTech);
                 num++;
@@ -255,7 +255,7 @@ public class TechMngrFrame extends PropertiesFrame {
             int result = fileChooser.showOpenDialog(parent);
             if(result == JFileChooser.APPROVE_OPTION) {
                 File selectedFile = fileChooser.getSelectedFile();
-                techDir.exportTechnology(parent, t.getName(), selectedFile);
+                techDir.exportTechnology(t.getName(), selectedFile);
             }
         }
 
@@ -270,7 +270,7 @@ public class TechMngrFrame extends PropertiesFrame {
                     return;
             }
 
-            techDir.deleteTechnology(parent, t.getName());
+            techDir.deleteTechnology(t.getName());
             rows.remove(row);
             removeRow(row);
         }
