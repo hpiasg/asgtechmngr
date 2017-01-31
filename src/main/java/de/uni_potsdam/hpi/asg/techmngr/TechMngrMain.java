@@ -23,6 +23,8 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import de.uni_potsdam.hpi.asg.common.iohelper.LoggerHelper;
+
 public class TechMngrMain {
 
     public static String techdir             = "$BASEDIR/tech";
@@ -32,6 +34,8 @@ public class TechMngrMain {
     public static String zipfileExtension    = ".zip";
 
     public static void main(String[] args) {
+        LoggerHelper.initLogger(3, null, false);
+
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e1) {

@@ -38,6 +38,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+//import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -47,6 +48,8 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.common.io.Files;
 
@@ -56,6 +59,7 @@ import de.uni_potsdam.hpi.asg.common.technology.Technology;
 
 public class TechMngrFrame extends PropertiesFrame {
     private static final long        serialVersionUID = -4879956586784429087L;
+    private static final Logger      logger           = LogManager.getLogger();
 
     private TechnologyDirectory      techDir;
     private InstalledTechsTableModel tablemodel;
@@ -151,7 +155,7 @@ public class TechMngrFrame extends PropertiesFrame {
         } else {
             num = importTechFromFile(file);
         }
-        JOptionPane.showMessageDialog(parent, "Imported " + num + " technologies", "Info", JOptionPane.INFORMATION_MESSAGE);
+        logger.info("Imported " + num + " technologies");
     }
 
     private int importTechFromFile(File file) {

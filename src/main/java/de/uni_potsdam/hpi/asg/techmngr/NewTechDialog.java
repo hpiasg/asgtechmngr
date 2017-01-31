@@ -34,10 +34,11 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.uni_potsdam.hpi.asg.common.gui.PropertiesDialog;
 import de.uni_potsdam.hpi.asg.common.gui.PropertiesPanel;
@@ -48,6 +49,7 @@ import de.uni_potsdam.hpi.asg.common.technology.Technology;
 
 public class NewTechDialog extends PropertiesDialog {
     private static final long   serialVersionUID = 7635453181517878899L;
+    private static final Logger logger           = LogManager.getLogger();
 
     private NewTechDialog       parent;
     private Technology          tech;
@@ -110,7 +112,7 @@ public class NewTechDialog extends PropertiesDialog {
             public void actionPerformed(ActionEvent e) {
                 if(checkInputDataValidity()) {
                     if(createTechnology()) {
-                        JOptionPane.showMessageDialog(parent, "Technology " + textfields.get(TextParam.name).getText() + " created successfully", "Info", JOptionPane.INFORMATION_MESSAGE);
+                        logger.info("Technology " + textfields.get(TextParam.name).getText() + " created successfully");
                         dispatchEvent(new WindowEvent(parent, WindowEvent.WINDOW_CLOSING));
                     }
                 }
@@ -154,17 +156,17 @@ public class NewTechDialog extends PropertiesDialog {
     private boolean checkNameValidity() {
         String name = textfields.get(TextParam.name).getText();
         if(name.equals("")) {
-            JOptionPane.showMessageDialog(this, "Name cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
+            logger.error("Name cannot be empty");
             return false;
         }
         if(!StringUtils.isAlphanumeric(name)) {
-            JOptionPane.showMessageDialog(this, "Name must be alphanumeric", "Error", JOptionPane.ERROR_MESSAGE);
+            logger.error("Name must be alphanumeric");
             return false;
         }
 
         File f = new File(getTechDir(), name + TechMngrMain.techfileExtension);
         if(f.exists()) {
-            JOptionPane.showMessageDialog(this, "Technology " + name + " already exists. Delete it first", "Error", JOptionPane.ERROR_MESSAGE);
+            logger.error("Technology " + name + " already exists. Delete it first");
             return false;
         }
         return true;
@@ -174,15 +176,15 @@ public class NewTechDialog extends PropertiesDialog {
         String balsafolder = textfields.get(TextParam.balsafolder).getText();
         File f = new File(balsafolder);
         if(!f.exists()) {
-            JOptionPane.showMessageDialog(this, "Balsa technology folder does not exists", "Error", JOptionPane.ERROR_MESSAGE);
+            logger.error("Balsa technology folder does not exists");
             return false;
         }
         if(!f.isDirectory()) {
-            JOptionPane.showMessageDialog(this, "Balsa technology folder should be a directory. It is not.", "Error", JOptionPane.ERROR_MESSAGE);
+            logger.error("Balsa technology folder should be a directory. It is not.");
             return false;
         }
         if(!Arrays.asList(f.list()).contains("startup.scm")) {
-            JOptionPane.showMessageDialog(this, "Balsa technology folder does not contain a startup.scm", "Error", JOptionPane.ERROR_MESSAGE);
+            logger.error("Balsa technology folder does not contain a startup.scm");
             return false;
         }
         return true;
@@ -192,7 +194,7 @@ public class NewTechDialog extends PropertiesDialog {
         String genlibfile = textfields.get(TextParam.genlibfile).getText();
         File f = new File(genlibfile);
         if(!f.exists()) {
-            JOptionPane.showMessageDialog(this, "Genlib file does not exists", "Error", JOptionPane.ERROR_MESSAGE);
+            logger.error("Genlib file does not exists");
             return false;
         }
         return true;

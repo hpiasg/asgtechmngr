@@ -25,9 +25,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-import javax.swing.JOptionPane;
-
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -41,6 +41,7 @@ import de.uni_potsdam.hpi.asg.common.technology.SyncTool;
 import de.uni_potsdam.hpi.asg.common.technology.Technology;
 
 public class TechnologyDirectory {
+    private static final Logger       logger = LogManager.getLogger();
 
     private File                      dir;
     private BiMap<String, Technology> techs;
@@ -85,7 +86,7 @@ public class TechnologyDirectory {
         try {
             FileUtils.copyDirectory(sourcedir, targetdir);
         } catch(IOException e) {
-            JOptionPane.showMessageDialog(parent, "Error while copying balsa technology directory", "Error", JOptionPane.ERROR_MESSAGE);
+            logger.error("Error while copying balsa technology directory");
             return null;
         }
 
@@ -95,7 +96,7 @@ public class TechnologyDirectory {
         try {
             FileUtils.copyFile(sourcefile, targetfile);
         } catch(IOException e) {
-            JOptionPane.showMessageDialog(parent, "Error while copying genlib file", "Error", JOptionPane.ERROR_MESSAGE);
+            logger.error("Error while copying genlib file");
             return null;
         }
 
@@ -103,7 +104,7 @@ public class TechnologyDirectory {
 
         Technology tech = new Technology(name, balsa, genlib, synctool);
         if(!Technology.writeOut(tech, new File(dir, name + TechMngrMain.techfileExtension))) {
-            JOptionPane.showMessageDialog(parent, "Error while creating technology file", "Error", JOptionPane.ERROR_MESSAGE);
+            logger.error("Error while creating technology file");
             return null;
         }
         this.techs.put(name, tech);
@@ -144,7 +145,7 @@ public class TechnologyDirectory {
         try {
             FileUtils.copyDirectory(balsadir, balsaDstDir);
         } catch(IOException e) {
-            JOptionPane.showMessageDialog(parent, "Failed to copy Balsa technology folder", "Error", JOptionPane.ERROR_MESSAGE);
+            logger.error("Failed to copy Balsa technology folder");
         }
 
         File genlibfile = new File(dir, name + TechMngrMain.genlibfileExtension);
@@ -152,7 +153,7 @@ public class TechnologyDirectory {
         try {
             FileUtils.copyFile(genlibfile, genlibDstFile);
         } catch(IOException e) {
-            JOptionPane.showMessageDialog(parent, "Failed to copy Genlib file", "Error", JOptionPane.ERROR_MESSAGE);
+            logger.error("Failed to copy Genlib file");
         }
 
         File techfile = new File(dir, name + TechMngrMain.techfileExtension);
@@ -160,12 +161,12 @@ public class TechnologyDirectory {
         try {
             FileUtils.copyFile(techfile, techDstFile);
         } catch(IOException e) {
-            JOptionPane.showMessageDialog(parent, "Failed to copy technology file", "Error", JOptionPane.ERROR_MESSAGE);
+            logger.error("Failed to copy technology file");
         }
 
         File dstFile = new File(dstDir, name + TechMngrMain.zipfileExtension);
         if(!Zipper.getInstance().zip(dstFile, tmpDir)) {
-            JOptionPane.showMessageDialog(parent, "Failed to create export file", "Error", JOptionPane.ERROR_MESSAGE);
+            logger.error("Failed to create export file");
         }
 
         try {
@@ -183,17 +184,17 @@ public class TechnologyDirectory {
         try {
             FileUtils.deleteDirectory(balsadir);
         } catch(IOException e) {
-            JOptionPane.showMessageDialog(parent, "Failed to remove Balsa technology folder", "Error", JOptionPane.ERROR_MESSAGE);
+            logger.error("Failed to remove Balsa technology folder");
         }
 
         File genlibfile = new File(dir, name + TechMngrMain.genlibfileExtension);
         if(!genlibfile.delete()) {
-            JOptionPane.showMessageDialog(parent, "Failed to remove Genlib file", "Error", JOptionPane.ERROR_MESSAGE);
+            logger.error("Failed to remove Genlib file");
         }
 
         File techfile = new File(dir, name + TechMngrMain.techfileExtension);
         if(!techfile.delete()) {
-            JOptionPane.showMessageDialog(parent, "Failed to remove technology file", "Error", JOptionPane.ERROR_MESSAGE);
+            logger.error("Failed to remove technology file");
         }
 
         techs.remove(name);
