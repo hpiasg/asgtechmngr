@@ -35,7 +35,7 @@ public class TechMngrMain {
     public static final String balsatechdir = "$BASEDIR/tools/balsa/share/tech";
 
     public static void main(String[] args) {
-        LoggerHelper.initLogger(3, null, false);
+        LoggerHelper.initLogger(3, null, false, "/techmngr_log4j2.xml");
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
