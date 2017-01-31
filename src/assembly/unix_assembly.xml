@@ -43,7 +43,7 @@ along with ASGtechmngr.  If not, see <http://www.gnu.org/licenses/>.
 			<outputDirectory>readme</outputDirectory>
 			<destName>ASGtechmngr_README.md</destName>
 		</file>
-	</files>	
+	</files>
 	<fileSets>
 		<fileSet>
 			<directory>target/bin</directory>
