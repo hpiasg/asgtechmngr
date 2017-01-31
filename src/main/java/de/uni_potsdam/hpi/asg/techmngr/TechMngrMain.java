@@ -31,8 +31,8 @@ import de.uni_potsdam.hpi.asg.common.technology.TechnologyDirectory;
 
 public class TechMngrMain {
 
-    public static String techdir      = "$BASEDIR/tech";
-    public static String balsatechdir = "$BASEDIR/tools/balsa/share/tech";
+    public static final String techdir      = "$BASEDIR/tech";
+    public static final String balsatechdir = "$BASEDIR/tools/balsa/share/tech";
 
     public static void main(String[] args) {
         LoggerHelper.initLogger(3, null, false);
