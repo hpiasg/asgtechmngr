@@ -28,9 +28,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.AbstractCellEditor;
@@ -47,14 +47,10 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.common.io.Files;
-
 import de.uni_potsdam.hpi.asg.common.gui.PropertiesFrame;
-import de.uni_potsdam.hpi.asg.common.iohelper.Zipper;
 import de.uni_potsdam.hpi.asg.common.technology.Technology;
 import de.uni_potsdam.hpi.asg.common.technology.TechnologyDirectory;
 
@@ -146,56 +142,16 @@ public class TechMngrFrame extends PropertiesFrame {
     }
 
     private void importTech(File file) {
-        if(!file.exists()) {
-            return;
-        }
+        Set<Technology> newTechs = techDir.importTechnology(file);
         int num = 0;
-        if(file.isDirectory()) {
-            num = importTechFromDir(file);
-            return;
-        } else {
-            num = importTechFromFile(file);
+        if(newTechs != null) {
+            num = newTechs.size();
+            for(Technology newTech : newTechs) {
+                tablemodel.addTech(newTech);
+            }
         }
+
         logger.info("Imported " + num + " technologies");
-    }
-
-    private int importTechFromFile(File file) {
-        Technology tech = Technology.readInSilent(file);
-        if(tech != null) {
-            Technology newTech = techDir.importTechnology(tech, file.getParentFile());
-            if(newTech != null) {
-                tablemodel.addTech(newTech);
-                return 1;
-            }
-        }
-
-        File tmpDir = Files.createTempDir();
-        if(Zipper.getInstance().unzip(file, tmpDir)) {
-            int num = importTechFromDir(tmpDir);
-            try {
-                FileUtils.deleteDirectory(tmpDir);
-            } catch(IOException e) {
-            }
-            return num;
-        }
-
-        return 0;
-    }
-
-    private int importTechFromDir(File file) {
-        TechnologyDirectory tmpTechDir = TechnologyDirectory.create(file, null);
-        if(tmpTechDir == null) {
-            return 0;
-        }
-        int num = 0;
-        for(Technology srcTech : tmpTechDir.getTechs()) {
-            Technology newTech = techDir.importTechnology(srcTech, file);
-            if(newTech != null) {
-                tablemodel.addTech(newTech);
-                num++;
-            }
-        }
-        return num;
     }
 
     private class InstalledTechsTableModel extends DefaultTableModel {
