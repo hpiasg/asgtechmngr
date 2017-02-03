@@ -52,6 +52,13 @@ along with ASGtechmngr.  If not, see <http://www.gnu.org/licenses/>.
 				<include>*</include>
 			</includes>
 		</fileSet>
+		<fileSet>
+			<directory>src/main/resources</directory>
+			<outputDirectory>.</outputDirectory>
+			<includes>
+				<include>config/**/*</include>
+			</includes>
+		</fileSet>
 	</fileSets>
 	<dependencySets>
 		<dependencySet>

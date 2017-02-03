@@ -70,10 +70,10 @@ along with ASGtechmngr.  If not, see <http://www.gnu.org/licenses/>.
 				</excludes>
 			</resource>
 			<resource>
-				<directory>src/main/resources/jar</directory>
-				<includes>
-					<include>**/*</include>
-				</includes>
+				<directory>src/main/resources</directory>
+				<excludes>
+					<exclude>**/*</exclude>
+				</excludes>
 			</resource>
 		</resources>
 		<pluginManagement>
@@ -145,6 +145,11 @@ along with ASGtechmngr.  If not, see <http://www.gnu.org/licenses/>.
 								<program>
 									<mainClass>de.uni_potsdam.hpi.asg.techmngr.TechMngrMain</mainClass>
 									<id>ASGtechmngr_gui</id>
+									<jvmSettings>
+										<extraArguments>
+											<extraArgument>-Dlog4j.configurationFile=@BASEDIR@/config/techmngr_log4j2.xml</extraArgument>
+										</extraArguments>
+									</jvmSettings>
 								</program>
 							</programs>
 							<repositoryLayout>flat</repositoryLayout>
@@ -203,6 +208,11 @@ along with ASGtechmngr.  If not, see <http://www.gnu.org/licenses/>.
 								<program>
 									<mainClass>de.uni_potsdam.hpi.asg.techmngr.TechMngrMain</mainClass>
 									<id>ASGtechmngr_gui</id>
+									<jvmSettings>
+										<extraArguments>
+											<extraArgument>-Dlog4j.configurationFile=@BASEDIR@/config/techmngr_log4j2.xml</extraArgument>
+										</extraArguments>
+									</jvmSettings>
 								</program>
 							</programs>
 							<repositoryLayout>flat</repositoryLayout>
