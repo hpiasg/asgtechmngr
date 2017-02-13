@@ -31,8 +31,8 @@ import de.uni_potsdam.hpi.asg.common.technology.TechnologyDirectory;
 
 public class TechMngrMain {
 
-    public static final String techdir      = "$BASEDIR/tech";
-    public static final String balsatechdir = "$BASEDIR/tools/balsa/share/tech";
+    public static final String TECH_DIR       = "$BASEDIR/tech";
+    public static final String BALSA_TECH_DIR = "$BASEDIR/tools/balsa/share/tech";
 
     public static void main(String[] args) {
         LoggerHelper.initLogger(3, null, false);
@@ -43,9 +43,9 @@ public class TechMngrMain {
             return;
         }
 
-        File balsaTechDirFile = FileHelper.getInstance().replaceBasedir(balsatechdir);
+        File balsaTechDirFile = FileHelper.getInstance().replaceBasedir(BALSA_TECH_DIR);
 
-        TechnologyDirectory techDir = TechnologyDirectory.create(techdir, balsaTechDirFile);
+        TechnologyDirectory techDir = TechnologyDirectory.create(TECH_DIR, balsaTechDirFile);
         if(techDir == null) {
             return;
         }

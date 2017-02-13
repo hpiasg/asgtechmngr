@@ -202,7 +202,7 @@ public class NewTechDialog extends PropertiesDialog {
     }
 
     private File getTechDir() {
-        return FileHelper.getInstance().replaceBasedir(TechMngrMain.techdir);
+        return FileHelper.getInstance().replaceBasedir(TechMngrMain.TECH_DIR);
     }
 
     public Technology getTech() {
