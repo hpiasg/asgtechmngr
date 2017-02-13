@@ -19,20 +19,14 @@ package de.uni_potsdam.hpi.asg.techmngr;
  * along with ASGtechmngr.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import java.io.File;
-
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import de.uni_potsdam.hpi.asg.common.iohelper.FileHelper;
 import de.uni_potsdam.hpi.asg.common.iohelper.LoggerHelper;
 import de.uni_potsdam.hpi.asg.common.technology.TechnologyDirectory;
 
 public class TechMngrMain {
-
-    public static final String TECH_DIR       = "$BASEDIR/tech";
-    public static final String BALSA_TECH_DIR = "$BASEDIR/tools/balsa/share/tech";
 
     public static void main(String[] args) {
         LoggerHelper.initLogger(3, null, false);
@@ -43,9 +37,7 @@ public class TechMngrMain {
             return;
         }
 
-        File balsaTechDirFile = FileHelper.getInstance().replaceBasedir(BALSA_TECH_DIR);
-
-        TechnologyDirectory techDir = TechnologyDirectory.create(TECH_DIR, balsaTechDirFile);
+        TechnologyDirectory techDir = TechnologyDirectory.createDefault();
         if(techDir == null) {
             return;
         }

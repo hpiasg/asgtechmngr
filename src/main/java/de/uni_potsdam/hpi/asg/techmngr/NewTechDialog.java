@@ -44,7 +44,7 @@ import de.uni_potsdam.hpi.asg.common.gui.PropertiesDialog;
 import de.uni_potsdam.hpi.asg.common.gui.PropertiesPanel;
 import de.uni_potsdam.hpi.asg.common.gui.PropertiesPanel.AbstractBooleanParam;
 import de.uni_potsdam.hpi.asg.common.gui.PropertiesPanel.AbstractTextParam;
-import de.uni_potsdam.hpi.asg.common.iohelper.FileHelper;
+import de.uni_potsdam.hpi.asg.common.misc.CommonConstants;
 import de.uni_potsdam.hpi.asg.common.technology.Technology;
 import de.uni_potsdam.hpi.asg.common.technology.TechnologyDirectory;
 
@@ -165,7 +165,7 @@ public class NewTechDialog extends PropertiesDialog {
             return false;
         }
 
-        File f = new File(getTechDir(), name + TechnologyDirectory.techfileExtension);
+        File f = new File(CommonConstants.DEF_TECH_DIR_FILE, name + CommonConstants.XMLTECH_FILE_EXTENSION);
         if(f.exists()) {
             logger.error("Technology " + name + " already exists. Delete it first");
             return false;
@@ -199,10 +199,6 @@ public class NewTechDialog extends PropertiesDialog {
             return false;
         }
         return true;
-    }
-
-    private File getTechDir() {
-        return FileHelper.getInstance().replaceBasedir(TechMngrMain.TECH_DIR);
     }
 
     public Technology getTech() {
