@@ -24,12 +24,13 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import de.uni_potsdam.hpi.asg.common.iohelper.LoggerHelper;
+import de.uni_potsdam.hpi.asg.common.iohelper.LoggerHelper.Mode;
 import de.uni_potsdam.hpi.asg.common.technology.TechnologyDirectory;
 
 public class TechMngrMain {
 
     public static void main(String[] args) {
-        LoggerHelper.initLogger(3, null, false);
+        LoggerHelper.initLogger(3, null, false, Mode.gui);
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
