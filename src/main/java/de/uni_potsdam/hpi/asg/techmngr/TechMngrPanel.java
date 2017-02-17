@@ -99,7 +99,7 @@ public class TechMngrPanel extends AbstractMainPanel {
         newButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JDialog editDia = new JDialog();
+                JDialog editDia = new JDialog(parent, "New technology");
                 NewTechPanel editPanel = new NewTechPanel(editDia, techDir);
                 editDia.getContentPane().add(editPanel);
                 editDia.setModalityType(ModalityType.APPLICATION_MODAL);
