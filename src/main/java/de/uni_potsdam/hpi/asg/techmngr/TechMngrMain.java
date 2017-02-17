@@ -23,6 +23,7 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import de.uni_potsdam.hpi.asg.common.gui.WatchForCloseWindowAdapter;
 import de.uni_potsdam.hpi.asg.common.iohelper.LoggerHelper;
 import de.uni_potsdam.hpi.asg.common.iohelper.LoggerHelper.Mode;
 import de.uni_potsdam.hpi.asg.common.technology.TechnologyDirectory;
@@ -43,12 +44,15 @@ public class TechMngrMain {
             return;
         }
 
-        TechMngrWindowAdapter adapt = new TechMngrWindowAdapter();
-        TechMngrFrame tiframe = new TechMngrFrame(adapt, techDir);
-        tiframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        tiframe.pack();
-        tiframe.setLocationRelativeTo(null); //center
-        tiframe.setVisible(true);
+        JFrame frame = new JFrame("ASGtechmngr");
+        TechMngrPanel panel = new TechMngrPanel(frame, techDir);
+        frame.getContentPane().add(panel);
+        WatchForCloseWindowAdapter adapt = new WatchForCloseWindowAdapter();
+        frame.addWindowListener(adapt);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.pack();
+        frame.setLocationRelativeTo(null); //center
+        frame.setVisible(true);
 
         while(!adapt.isClosed()) {
             try {

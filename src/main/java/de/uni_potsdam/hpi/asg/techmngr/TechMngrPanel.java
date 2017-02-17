@@ -20,13 +20,13 @@ package de.uni_potsdam.hpi.asg.techmngr;
  */
 
 import java.awt.Component;
-import java.awt.Container;
+import java.awt.Dialog.ModalityType;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +35,8 @@ import java.util.Vector;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 //import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -50,30 +50,28 @@ import javax.swing.table.TableColumn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.uni_potsdam.hpi.asg.common.gui.PropertiesFrame;
+import de.uni_potsdam.hpi.asg.common.gui.AbstractMainPanel;
 import de.uni_potsdam.hpi.asg.common.technology.Technology;
 import de.uni_potsdam.hpi.asg.common.technology.TechnologyDirectory;
 
-public class TechMngrFrame extends PropertiesFrame {
+public class TechMngrPanel extends AbstractMainPanel {
     private static final long        serialVersionUID = -4879956586784429087L;
     private static final Logger      logger           = LogManager.getLogger();
 
     private TechnologyDirectory      techDir;
     private InstalledTechsTableModel tablemodel;
-    private JFrame                   parent;
+    private Window                   parent;
 
-    public TechMngrFrame(WindowAdapter adapt, TechnologyDirectory techDir) {
-        super("ASGtechmngr");
-        this.addWindowListener(adapt);
+    public TechMngrPanel(Window parent, TechnologyDirectory techDir) {
         this.techDir = techDir;
-        this.parent = this;
+        this.parent = parent;
 
-        constructManagePanel(getContentPane());
+        constructManagePanel();
     }
 
-    private void constructManagePanel(Container root) {
+    private void constructManagePanel() {
         JPanel mngPanel = new JPanel();
-        root.add(mngPanel);
+        this.add(mngPanel);
         GridBagLayout gbl_mngpanel = new GridBagLayout();
         gbl_mngpanel.columnWidths = new int[]{150, 70, 150, 0};
         gbl_mngpanel.columnWeights = new double[]{1.0, 0.0, 1.0, Double.MIN_VALUE};
@@ -101,13 +99,17 @@ public class TechMngrFrame extends PropertiesFrame {
         newButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                NewTechDialog editDia = new NewTechDialog(techDir);
+                JDialog editDia = new JDialog();
+                NewTechPanel editPanel = new NewTechPanel(editDia, techDir);
+                editDia.getContentPane().add(editPanel);
+                editDia.setModalityType(ModalityType.APPLICATION_MODAL);
                 editDia.pack();
                 editDia.setLocationRelativeTo(null); //center
                 editDia.setVisible(true);
+
                 //wait
-                if(editDia.getTech() != null) {
-                    tablemodel.addTech(editDia.getTech());
+                if(editPanel.getTech() != null) {
+                    tablemodel.addTech(editPanel.getTech());
                 }
             }
         });

@@ -19,11 +19,11 @@ package de.uni_potsdam.hpi.asg.techmngr;
  * along with ASGtechmngr.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -40,7 +40,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.uni_potsdam.hpi.asg.common.gui.PropertiesDialog;
+import de.uni_potsdam.hpi.asg.common.gui.AbstractMainPanel;
 import de.uni_potsdam.hpi.asg.common.gui.PropertiesPanel;
 import de.uni_potsdam.hpi.asg.common.gui.PropertiesPanel.AbstractBooleanParam;
 import de.uni_potsdam.hpi.asg.common.gui.PropertiesPanel.AbstractTextParam;
@@ -48,11 +48,11 @@ import de.uni_potsdam.hpi.asg.common.misc.CommonConstants;
 import de.uni_potsdam.hpi.asg.common.technology.Technology;
 import de.uni_potsdam.hpi.asg.common.technology.TechnologyDirectory;
 
-public class NewTechDialog extends PropertiesDialog {
+public class NewTechPanel extends AbstractMainPanel {
     private static final long   serialVersionUID = 7635453181517878899L;
     private static final Logger logger           = LogManager.getLogger();
 
-    private NewTechDialog       parent;
+    private Window              parent;
     private Technology          tech;
     private TechnologyDirectory techDir;
 
@@ -65,19 +65,17 @@ public class NewTechDialog extends PropertiesDialog {
     }
     //@formatter:on
 
-    public NewTechDialog(TechnologyDirectory techDir) {
-        this.parent = this;
+    public NewTechPanel(Window parent, TechnologyDirectory techDir) {
+        this.parent = parent;
         this.tech = null;
         this.techDir = techDir;
 
-        this.setModalityType(ModalityType.APPLICATION_MODAL);
-
-        constructEditPanel(getContentPane());
+        constructEditPanel();
     }
 
-    private void constructEditPanel(Container root) {
-        PropertiesPanel editPanel = new PropertiesPanel(this);
-        root.add(editPanel);
+    private void constructEditPanel() {
+        PropertiesPanel editPanel = new PropertiesPanel(parent);
+        this.add(editPanel);
         GridBagLayout gbl_editpanel = new GridBagLayout();
         gbl_editpanel.columnWidths = new int[]{150, 300, 0, 0, 40, 0};
         gbl_editpanel.columnWeights = new double[]{0.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
