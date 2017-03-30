@@ -58,7 +58,7 @@ public class NewTechPanel extends AbstractMainPanel {
 
     //@formatter:off
     public enum TextParam implements AbstractTextParam {
-        /*edit*/ name, balsafolder, genlibfile, searchpath, libraries
+        /*edit*/ name, balsafolder, genlibfile, searchpath, libraries, layouttcl
     }
 
     public enum BooleanParam implements AbstractBooleanParam {
@@ -88,6 +88,7 @@ public class NewTechPanel extends AbstractMainPanel {
         editPanel.addTextEntry(2, TextParam.genlibfile, "Genlib file", "", true, JFileChooser.FILES_ONLY, false);
         editPanel.addTextEntry(3, TextParam.searchpath, "Search path", "", false, null, false, true, "While using Design Compiler this value is appended to 'search_path'");
         editPanel.addTextEntry(4, TextParam.libraries, "Libraries", "", false, null, false, true, "While using Design Compiler 'link_library' and 'target_library' are set to this value\n(Thus you can define multiple libraries by seperating them with a space character)");
+        editPanel.addTextEntry(4, TextParam.layouttcl, "TCL file for layouting", "", false, null, false);
         addButtons(editPanel);
 
         getDataFromPanel(editPanel);
@@ -130,7 +131,9 @@ public class NewTechPanel extends AbstractMainPanel {
         List<String> postCompileCmds = new ArrayList<>(); // aka not yet implemented
         List<String> verilogIncludes = new ArrayList<>(); // aka not yet implemented
 
-        Technology tech = techDir.createTechnology(name, balsafolder, "resyn", genlibfile, searchPaths, libraries, postCompileCmds, verilogIncludes);
+        String layouttcl = textfields.get(TextParam.layouttcl).getText();
+
+        Technology tech = techDir.createTechnology(name, balsafolder, "resyn", genlibfile, searchPaths, libraries, postCompileCmds, verilogIncludes, layouttcl);
         if(tech == null) {
             return false;
         }
