@@ -58,7 +58,7 @@ public class NewTechPanel extends AbstractMainPanel {
 
     //@formatter:off
     public enum TextParam implements AbstractTextParam {
-        /*edit*/ name, balsafolder, genlibfile, searchpath, libraries, layouttcl
+        /*edit*/ name, balsafolder, genlibfile, liberty, addInfo, searchpath, libraries, layouttcl
     }
 
     public enum BooleanParam implements AbstractBooleanParam {
@@ -79,16 +79,19 @@ public class NewTechPanel extends AbstractMainPanel {
         GridBagLayout gbl_editpanel = new GridBagLayout();
         gbl_editpanel.columnWidths = new int[]{150, 300, 0, 0, 40, 0};
         gbl_editpanel.columnWeights = new double[]{0.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-        gbl_editpanel.rowHeights = new int[]{15, 15, 15, 15, 15, 15, 0};
-        gbl_editpanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+        gbl_editpanel.rowHeights = new int[]{15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 0};
+        gbl_editpanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
         editPanel.setLayout(gbl_editpanel);
 
         editPanel.addTextEntry(0, TextParam.name, "Name", "");
         editPanel.addTextEntry(1, TextParam.balsafolder, "Balsa technology folder", "", true, JFileChooser.DIRECTORIES_ONLY, false, true, "Choose the folder which contains the startup.scm");
         editPanel.addTextEntry(2, TextParam.genlibfile, "Genlib file", "", true, JFileChooser.FILES_ONLY, false);
-        editPanel.addTextEntry(3, TextParam.searchpath, "Search path", "", false, null, false, true, "While using Design Compiler this value is appended to 'search_path'");
-        editPanel.addTextEntry(4, TextParam.libraries, "Libraries", "", false, null, false, true, "While using Design Compiler 'link_library' and 'target_library' are set to this value\n(Thus you can define multiple libraries by seperating them with a space character)");
-        editPanel.addTextEntry(4, TextParam.layouttcl, "TCL file for layouting", "", false, null, false);
+        editPanel.addTextEntry(3, TextParam.liberty, "Liberty file", "", true, JFileChooser.FILES_ONLY, false);
+        editPanel.addTextEntry(4, TextParam.addInfo, "Additional info file", "", true, JFileChooser.FILES_ONLY, false);
+
+        editPanel.addTextEntry(6, TextParam.searchpath, "Search path", "", false, null, false, true, "While using Design Compiler this value is appended to 'search_path'");
+        editPanel.addTextEntry(7, TextParam.libraries, "Libraries", "", false, null, false, true, "While using Design Compiler 'link_library' and 'target_library' are set to this value\n(Thus you can define multiple libraries by seperating them with a space character)");
+        editPanel.addTextEntry(8, TextParam.layouttcl, "TCL file for layouting", "", false, null, false);
         addButtons(editPanel);
 
         getDataFromPanel(editPanel);
@@ -103,7 +106,7 @@ public class NewTechPanel extends AbstractMainPanel {
         gbc_btnpanel.fill = GridBagConstraints.HORIZONTAL;
         gbc_btnpanel.gridx = 0;
         gbc_btnpanel.gridwidth = 5;
-        gbc_btnpanel.gridy = 5;
+        gbc_btnpanel.gridy = 9;
         editPanel.add(btnPanel, gbc_btnpanel);
 
         JButton saveButton = new JButton("Save & close");
@@ -123,8 +126,10 @@ public class NewTechPanel extends AbstractMainPanel {
 
     private boolean createTechnology() {
         String name = textfields.get(TextParam.name).getText();
-        String balsafolder = textfields.get(TextParam.balsafolder).getText();
-        String genlibfile = textfields.get(TextParam.genlibfile).getText();
+        File balsafolder = new File(textfields.get(TextParam.balsafolder).getText());
+        File genlibfile = new File(textfields.get(TextParam.genlibfile).getText());
+        File libertylibfile = new File(textfields.get(TextParam.liberty).getText());
+        File addInfoFile = new File(textfields.get(TextParam.addInfo).getText());
 
         String searchPaths = textfields.get(TextParam.searchpath).getText();
         String libraries = textfields.get(TextParam.libraries).getText();
@@ -133,7 +138,7 @@ public class NewTechPanel extends AbstractMainPanel {
 
         String layouttcl = textfields.get(TextParam.layouttcl).getText();
 
-        Technology tech = techDir.createTechnology(name, balsafolder, "resyn", genlibfile, searchPaths, libraries, postCompileCmds, verilogIncludes, layouttcl);
+        Technology tech = techDir.createTechnology(name, balsafolder, "resyn", genlibfile, searchPaths, libraries, postCompileCmds, verilogIncludes, layouttcl, libertylibfile, addInfoFile);
         if(tech == null) {
             return false;
         }
@@ -150,6 +155,12 @@ public class NewTechPanel extends AbstractMainPanel {
             return false;
         }
         if(!checkGenlibFileValidity()) {
+            return false;
+        }
+        if(!checkLibertyFileValidity()) {
+            return false;
+        }
+        if(!checkAddInfoFileValidity()) {
             return false;
         }
         return true;
@@ -197,6 +208,26 @@ public class NewTechPanel extends AbstractMainPanel {
         File f = new File(genlibfile);
         if(!f.exists()) {
             logger.error("Genlib file does not exists");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean checkLibertyFileValidity() {
+        String libertyfile = textfields.get(TextParam.liberty).getText();
+        File f = new File(libertyfile);
+        if(!f.exists()) {
+            logger.error("Liberty file does not exists");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean checkAddInfoFileValidity() {
+        String addInfofile = textfields.get(TextParam.addInfo).getText();
+        File f = new File(addInfofile);
+        if(!f.exists()) {
+            logger.error("AddInfo file does not exists");
             return false;
         }
         return true;
