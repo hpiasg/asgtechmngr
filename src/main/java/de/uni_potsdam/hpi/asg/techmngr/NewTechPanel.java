@@ -77,20 +77,20 @@ public class NewTechPanel extends AbstractMainPanel {
         PropertiesPanel editPanel = new PropertiesPanel(parent);
         this.add(editPanel);
         GridBagLayout gbl_editpanel = new GridBagLayout();
-        gbl_editpanel.columnWidths = new int[]{150, 300, 0, 0, 40, 0};
+        gbl_editpanel.columnWidths = new int[]{170, 300, 0, 0, 40, 0};
         gbl_editpanel.columnWeights = new double[]{0.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
         gbl_editpanel.rowHeights = new int[]{15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 0};
         gbl_editpanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
         editPanel.setLayout(gbl_editpanel);
 
         editPanel.addTextEntry(0, TextParam.name, "Name", "");
-        editPanel.addTextEntry(1, TextParam.balsafolder, "Balsa technology folder", "", true, JFileChooser.DIRECTORIES_ONLY, false, true, "Choose the folder which contains the startup.scm");
+        editPanel.addTextEntry(1, TextParam.balsafolder, "Balsa technology directory", "", true, JFileChooser.DIRECTORIES_ONLY, false, true, "Choose the directory which contains the startup.scm");
         editPanel.addTextEntry(2, TextParam.genlibfile, "Genlib file", "", true, JFileChooser.FILES_ONLY, false);
         editPanel.addTextEntry(3, TextParam.liberty, "Liberty file", "", true, JFileChooser.FILES_ONLY, false);
         editPanel.addTextEntry(4, TextParam.addInfo, "Additional info file", "", true, JFileChooser.FILES_ONLY, false);
 
         editPanel.addTextEntry(6, TextParam.searchpath, "Search path", "", false, null, false, true, "While using Design Compiler this value is appended to 'search_path'");
-        editPanel.addTextEntry(7, TextParam.libraries, "Libraries", "", false, null, false, true, "While using Design Compiler 'link_library' and 'target_library' are set to this value\n(Thus you can define multiple libraries by seperating them with a space character)");
+        editPanel.addTextEntry(7, TextParam.libraries, "Libraries", "", false, null, false, true, "While using Design Compiler 'link_library' and 'target_library' are set to this value\n(Thus you can define multiple libraries by separating them with a space character)");
         editPanel.addTextEntry(8, TextParam.layouttcl, "TCL file for layouting", "", false, null, false);
         addButtons(editPanel);
 
